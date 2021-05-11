@@ -5,6 +5,12 @@
 
 import scrapy
 
+class CategoryAmazonItem(scrapy.Item):
+    current_cat    = scrapy.Field()
+    current_url    = scrapy.Field()
+    superior_cats  = scrapy.Field()
+    sub_cats       = scrapy.Field()
+
 
 class BooksScrapyAmazonItem(scrapy.Item):
     title_category = scrapy.Field()    
@@ -13,10 +19,9 @@ class BooksScrapyAmazonItem(scrapy.Item):
     subtitle       = scrapy.Field()
     author         = scrapy.Field()
     author_role    = scrapy.Field()
-    #author_url    = scrapy.Field()
     audible_flag   = scrapy.Field()
     print_length   = scrapy.Field()
-    book_volume    = scrapy.Field() #stored as string for latter
+    book_volume    = scrapy.Field() 
     release_date   = scrapy.Field()
     language       = scrapy.Field()
     star_rating    = scrapy.Field()
