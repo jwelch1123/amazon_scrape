@@ -14,18 +14,60 @@ class amazon_cat_spider(Spider):
         them to this method. At each level, create an item showing
         superior and sub categories.
         '''
+        #header = {
+        #"Connection": "keep-alive",
+        #"Upgrade-Insecure-Requests": "1",
+        #"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36",
+        #"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        #"Sec-Fetch-Site": "same-origin",
+        #"Sec-Fetch-Mode": "navigate",
+        #"Sec-Fetch-User": "?1",
+        #"Sec-Fetch-Dest": "document",
+        #"Referer": "https://www.google.com/",
+        #"Accept-Encoding": "gzip, deflate, br",
+        #"Accept-Language": "en-US,en;q=0.9"
+    #}
+        
+        
         amazon_url = 'https://www.amazon.com'
+        
+        bot_check_tag = response.xpath(".//form[@action = '/errors/validateCaptcha']")
+        
+        if bot_check_tag:
+            print("*"*100)
+            print("*"*100)
+            print("*"*100)
+            print("THEY GOT ME")
+            print("*"*100)
+            print("*"*100)
+            print("*"*100)
      
         # Get list of categories for manipulation
-        avalible_categories_elements = response.xpath(".//div[@id = 'departments']/ul")
-        
+        try:
+            avalible_categories_elements = response.xpath(".//div[@id = 'departments']/ul")
+        except:
+            avalible_categories_elements = ""
+            
         # get information and clean
-        current_cat   = avalible_categories_elements.xpath(".//span[contains(@class,'a-text-bold')]/text()").extract()[0]
-        superior_cats = avalible_categories_elements.xpath(".//span[contains(@class,'s-back-arrow')]/../span/text()").extract()
-        if superior_cats == []:
-            superior_cats = "Amazon"
-        sub_cats      = avalible_categories_elements.xpath("./li[contains(@class,'s-navigation-indent')]//a/span/text()").extract()
+        try:
+            current_cat   = avalible_categories_elements.xpath(".//span[contains(@class,'a-text-bold')]/text()").extract()[0]
+        except:
+            current_cat   = ""
         
+        
+        try:
+            superior_cats = avalible_categories_elements.xpath(".//span[contains(@class,'s-back-arrow')]/../span/text()").extract()
+            if superior_cats == []:
+                superior_cats = "Amazon"
+        except:
+            superior_cats = ""
+            
+        # List of categories below current level
+        try:
+            sub_cats      = avalible_categories_elements.xpath("./li[contains(@class,'s-navigation-indent')]//a/span/text()").extract()
+        except:
+            sub_cats      = ""
+            
         # Create ITEM
         categoryItem = CategoryAmazonItem()
         categoryItem["current_cat"]    = current_cat
@@ -42,5 +84,5 @@ class amazon_cat_spider(Spider):
         if avalible_cat_urls != []: 
             for cat_url in avalible_cat_urls:
                 url = amazon_url + cat_url
-                yield Request(url = url, callback = self.parse)
+                yield Request(url = url, callback = self.parse, header = header)
         

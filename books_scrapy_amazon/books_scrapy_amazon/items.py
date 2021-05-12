@@ -10,7 +10,7 @@ class CategoryAmazonItem(scrapy.Item):
     current_url    = scrapy.Field()
     superior_cats  = scrapy.Field()
     sub_cats       = scrapy.Field()
-
+    
 
 class BooksScrapyAmazonItem(scrapy.Item):
     title_category = scrapy.Field()    
