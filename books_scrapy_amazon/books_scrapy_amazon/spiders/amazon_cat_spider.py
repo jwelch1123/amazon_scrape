@@ -2,33 +2,23 @@
 from scrapy import Spider, Request
 from books_scrapy_amazon.items import CategoryAmazonItem
 import re
+from scraper_api import ScraperAPIClient
+
+client = ScraperAPIClient("6a2b42189b564d94c1df3037d1050188")
+
 
 class amazon_cat_spider(Spider):
     name            = 'amazon_cat_spider'
     allowed_urls    = ['https://www.amazon.com']
     start_urls      = ['https://www.amazon.com/s?i=stripbooks&bbn=283155&rh=n%3A283155&dc&fs=true&qid=1620260821&ref=sr_ex_n_1']
     custom_settings = {'WRITE_CATEGORY':True}
+    session_ID = 1
 
     def parse(self, response):
         '''Get list of sub_category URLs and recursively pass 
         them to this method. At each level, create an item showing
         superior and sub categories.
-        '''
-        #header = {
-        #"Connection": "keep-alive",
-        #"Upgrade-Insecure-Requests": "1",
-        #"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36",
-        #"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-        #"Sec-Fetch-Site": "same-origin",
-        #"Sec-Fetch-Mode": "navigate",
-        #"Sec-Fetch-User": "?1",
-        #"Sec-Fetch-Dest": "document",
-        #"Referer": "https://www.google.com/",
-        #"Accept-Encoding": "gzip, deflate, br",
-        #"Accept-Language": "en-US,en;q=0.9"
-    #}
-        
-        
+        '''     
         amazon_url = 'https://www.amazon.com'
         
         bot_check_tag = response.xpath(".//form[@action = '/errors/validateCaptcha']")
@@ -37,10 +27,9 @@ class amazon_cat_spider(Spider):
             print("*"*100)
             print("*"*100)
             print("*"*100)
-            print("THEY GOT ME")
-            print("*"*100)
-            print("*"*100)
-            print("*"*100)
+            self.session_ID = self.session_ID+1
+            yield Request(client.scrapyGet(url=response.url, session_number= self.session_ID), callback=self.parse)
+            
      
         # Get list of categories for manipulation
         try:
@@ -84,5 +73,7 @@ class amazon_cat_spider(Spider):
         if avalible_cat_urls != []: 
             for cat_url in avalible_cat_urls:
                 url = amazon_url + cat_url
-                yield Request(url = url, callback = self.parse, header = header)
+                yield Request(client.scrapyGet(url=url, 
+                                     session_number = self.session_ID),
+                                     callback=self.parse)
         

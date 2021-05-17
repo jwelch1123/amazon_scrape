@@ -30,7 +30,9 @@ class TitleItem(scrapy.Item):
 
 class CategoryItem(scrapy.Item):
 	parent_category     = scrapy.Field()
+	parent_url          = scrapy.Field()
 	self_url            = scrapy.Field()    
 	category_name       = scrapy.Field()
 	category_numb_title = scrapy.Field()    
 	title_list_url      = scrapy.Field()
+ 
