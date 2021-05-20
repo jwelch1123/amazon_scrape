@@ -4,8 +4,11 @@ from books_scrapy_amazon.items import CategoryAmazonItem
 import re
 from scraper_api import ScraperAPIClient
 
-client = ScraperAPIClient("6a2b42189b564d94c1df3037d1050188")
-
+client = ScraperAPIClient("trial") 
+# just kidding, you probably need your own. 
+#   https://www.scraperapi.com/
+# Great service, highly reccommeneded.
+#  Customer service was a little slow. 
 
 class amazon_cat_spider(Spider):
     name            = 'amazon_cat_spider'

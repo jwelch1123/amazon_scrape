@@ -35,4 +35,6 @@ class CategoryItem(scrapy.Item):
 	category_name       = scrapy.Field()
 	category_numb_title = scrapy.Field()    
 	title_list_url      = scrapy.Field()
+	leaf_flag           = scrapy.Field()
+
  

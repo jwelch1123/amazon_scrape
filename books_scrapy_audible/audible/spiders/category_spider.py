@@ -64,6 +64,14 @@ class category_spider(Spider):
             title_list_link = response.xpath(".//a[contains(@class,'allInCategoryPageLink')]/@href").extract()[0]
             title_list_link = audible_url + title_list_link
         
+        #Detects if any of the Sub-categories have a bold text, indicating no further sub-categories.
+        sub_cat_bold = response.xpath(".//div[@id='center-0']//ul[contains(@class,'bc-list')]//span[contains(@class,'bc-text-bold')]")
+        
+        if sub_cat_bold != []:
+            leaf_flag = True
+        else:
+            leaf_flag = False
+        
             
         #Create object and store information for CSV storage
         category_entry = CategoryItem() 
@@ -73,11 +81,9 @@ class category_spider(Spider):
         category_entry['category_name']       = cat_name
         category_entry['category_numb_title'] = cat_number
         category_entry['title_list_url']      = title_list_link
+        category_entry['leaf_flag']           = leaf_flag
         yield(category_entry)
         
-        
-        #Detects if any of the Sub-categories have a bold text, indicating no further sub-categories.
-        sub_cat_bold = response.xpath(".//div[@id='center-0']//ul[contains(@class,'bc-list')]//span[contains(@class,'bc-text-bold')]")
         
         #Sub-category url list for current page
         sub_cat_list = response.xpath(".//div[@id='center-0']//ul[contains(@class,'bc-list')]//li[@class='bc-list-item']/a/@href").extract()
