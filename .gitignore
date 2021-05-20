@@ -1,3 +1,18 @@
+<<<<<<< HEAD
+=======
+# Personal
+*.csv
+*.xlsx
+
+# Folder view configuration files
+.DS_Store
+Desktop.ini
+
+# Thumbnail cache files
+._*
+Thumbs.db
+
+>>>>>>> f1674bbf9829818c2601c126b2e6f35a2492bb66
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
